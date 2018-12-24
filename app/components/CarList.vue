@@ -1,100 +1,130 @@
 <template>
-    <Page class="page">
-        <ActionBar class="action-bar">
-            <Label class="action-bar-title" :text="myConnectionType" horizontalAlignment="center" />
-        </ActionBar>
+  <Page class="page">
+    <ActionBar class="action-bar">
+      <Label class="action-bar-title" text="Listado de Juegos" horizontalAlignment="center"/>
+    </ActionBar>
 
-        <RadListView v-if="!isLoading" for="item in carList" @itemTap="onItemTap" class="list-group">
-            <ListViewLinearLayout v-tkListViewLayout scrollDirection="Vertical"/>
-            <v-template>
-                <GridLayout rows="*, *, *" columns="*, *" class="list-group-item-content">
-                    <Label :text="item.name" class="text-primary list-group-item-text font-weight-bold"/>
-                    <Label col="1" horizontalAlignment="right" class="list-group-item-text m-r-5">
-                        <FormattedString>
-                            <Span text.decode="&euro;"/>
-                            <Span :text="item.price"/>
-                            <Span text="/day"/>
-                        </FormattedString>
-                    </Label>
+    <RadListView v-if="!isLoading" for="item in carList" @itemTap="onItemTap" class="list-group">
+      <ListViewLinearLayout v-tkListViewLayout scrollDirection="Vertical"/>
+      <v-template>
+        <GridLayout rows="*, *, *" columns="*, *" class="list-group-item-content">
+          <Label :text="item.name" class="text-primary list-group-item-text font-weight-bold"/>
+          <Label col="1" horizontalAlignment="right" class="list-group-item-text m-r-5">
+            <FormattedString>
+              <Span text.decode="&euro;"/>
+              <Span :text="item.price"/>
+              <Span text="/day"/>
+            </FormattedString>
+          </Label>
 
-                    <Label row="1" class="hr-light m-t-5 m-b-5" colSpan="2"/>
+          <Label row="1" class="hr-light m-t-5 m-b-5" colspan="2"/>
 
-                    <Image row="2" :src="item.imageUrl" stretch="aspectFill" height="120" class="m-r-20" loadMode="async"/>
+          <Image
+            row="2"
+            :src="item.imageUrl"
+            stretch="aspectFill"
+            height="120"
+            class="m-r-20"
+            loadMode="async"
+          />
 
-                    <StackLayout row="2" col="1" verticalAlignment="center" class="list-group-item-text">
-                        <Label class="p-b-10">
-                            <FormattedString ios.fontFamily="system">
-                                <Span text.decode="&#xf1b9;   " class="fa text-primary"></Span>
-                                <Span :text="item.class"/>
-                            </FormattedString>
-                        </Label>
-                        <Label class="p-b-10">
-                            <FormattedString ios.fontFamily="system">
-                                <Span text.decode="&#xf085;   " class="fa text-primary"/>
-                                <Span :text="item.transmission"/>
-                                <Span text=" Transmission"/>
-                            </FormattedString>
-                        </Label>
-                        <Label class="p-b-10">
-                            <FormattedString ios.fontFamily="system">
-                                <Span text.decode="&#xf2dc;   " class="fa text-primary"/>
-                                <Span :text="item.hasAC ? 'Yes' : 'No'"/>
-                            </FormattedString>
-                        </Label>
-                    </StackLayout>
-                </GridLayout>
-            </v-template>
-        </RadListView>
-        <ActivityIndicator v-else :busy="isLoading"/>
-    </Page>
+          <StackLayout row="2" col="1" verticalAlignment="center" class="list-group-item-text">
+            <Label class="p-b-10">
+              <FormattedString ios.fontFamily="system">
+                <Span text.decode="&#xf1b9;   " class="fa text-primary"></Span>
+                <Span :text="item.class"/>
+              </FormattedString>
+            </Label>
+            <Label class="p-b-10">
+              <FormattedString ios.fontFamily="system">
+                <Span text.decode="&#xf085;   " class="fa text-primary"/>
+                <Span :text="item.transmission"/>
+                <Span text=" Transmission"/>
+              </FormattedString>
+            </Label>
+            <Label class="p-b-10">
+              <FormattedString ios.fontFamily="system">
+                <Span text.decode="&#xf2dc;   " class="fa text-primary"/>
+                <Span :text="item.hasAC ? 'Yes' : 'No'"/>
+              </FormattedString>
+            </Label>
+          </StackLayout>
+        </GridLayout>
+      </v-template>
+    </RadListView>
+    <ActivityIndicator v-else :busy="isLoading"/>
+  </Page>
 </template>
 
-<script src="http://192.168.1.3:8098"></script>
 <script>
-    import CarDetails from "./CarDetails";
-    import { getConnectionType } from "tns-core-modules/connectivity";
+import * as dialogs from "tns-core-modules/ui/dialogs";
+import CarDetails from "./CarDetails";
+import { connectionType, startMonitoring } from "tns-core-modules/connectivity";
 
-    export default {
-        data: {
-            myConnectionType: getConnectionType()
-        },
-        computed: {
-            carList() {
-                return this.$root.cars;
-            },
+export default {
+  created() {
+    startMonitoring(newConnectionType => {
+      switch (newConnectionType) {
+        case connectionType.none:
+          dialogs.alert("Connection type changed to none.").then(() => {
+            console.log("Connection type changed to none.");
+          });
+          break;
+        case connectionType.wifi:
+          dialogs.alert("Connection type changed to WiFi.").then(() => {
+            console.log("Connection type changed to WiFi");
+          });
+          break;
+        case connectionType.mobile:
+          dialogs.alert("Connection type changed to mobile.").then(() => {
+            console.log("Connection type changed to mobile.");
+          });
+          break;
+        default:
+          dialogs.alert("No coincidence").then(() => {
+            console.log("No coincidence");
+          });
+          break;
+      }
+    });
+  },
+  computed: {
+    carList() {
+      return this.$root.cars;
+    },
 
-            isLoading() {
-                return !this.carList.length;
-            }
-        },
+    isLoading() {
+      return !this.carList.length;
+    }
+  },
 
-        methods: {
-            onItemTap(e) {
-                this.$emit("select", e.item);
-                this.$navigateTo(CarDetails, { props: { car: e.item } });
-            }
-        }
-    };
+  methods: {
+    onItemTap(e) {
+      this.$emit("select", e.item);
+      this.$navigateTo(CarDetails, { props: { car: e.item } });
+    }
+  }
+};
 </script>
 
 <style scoped lang="scss">
-    // Start custom common variables
-    @import '../app-variables';
-    // End custom common variables
+// Start custom common variables
+@import "../app-variables";
+// End custom common variables
 
-    // Custom styles
-    .list-group {
-        .list-group-item-content {
-            padding: 8 15 4 15;
-            background-color: $background-light;
-        }
+// Custom styles
+.list-group {
+  .list-group-item-content {
+    padding: 8 15 4 15;
+    background-color: $background-light;
+  }
 
-        .list-group-item-text {
-            margin: 2 3;
-        }
+  .list-group-item-text {
+    margin: 2 3;
+  }
 
-        .fa {
-            color: $accent-dark;
-        }
-    }
+  .fa {
+    color: $accent-dark;
+  }
+}
 </style>
