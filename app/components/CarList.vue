@@ -1,7 +1,10 @@
 <template>
   <Page class="page">
     <ActionBar class="action-bar">
-      <Label class="action-bar-title" text="Listado de Juegos" horizontalAlignment="center"/>
+      <Label class="action-bar-title" text="Games" horizontalAlignment="left"/>
+      <ActionItem ios.position="right" android.position="right">
+          <Switch :checked="isConnected" />
+      </ActionItem>
     </ActionBar>
 
     <RadListView v-if="!isLoading" for="item in carList" @itemTap="onItemTap" class="list-group">
@@ -16,7 +19,6 @@
               <Span text="/day"/>
             </FormattedString>
           </Label>
-
           <Label row="1" class="hr-light m-t-5 m-b-5" colspan="2"/>
 
           <Image
@@ -60,30 +62,33 @@
 import * as dialogs from "tns-core-modules/ui/dialogs";
 import CarDetails from "./CarDetails";
 import { connectionType, startMonitoring } from "tns-core-modules/connectivity";
+import { DBConnection } from '../services/db/DBConnection';
 
 export default {
+  data: {
+    isConnected: false
+  },
   created() {
     startMonitoring(newConnectionType => {
       switch (newConnectionType) {
         case connectionType.none:
-          dialogs.alert("Connection type changed to none.").then(() => {
-            console.log("Connection type changed to none.");
-          });
+          this.isConnected = false;
+          dialogs.alert("Connection type changed to none.").then({});
           break;
         case connectionType.wifi:
-          dialogs.alert("Connection type changed to WiFi.").then(() => {
-            console.log("Connection type changed to WiFi");
-          });
+          const db = new DBConnection();
+          console.log(db);
+    
+          this.isConnected = true;
+          dialogs.alert("Connection type changed to WiFi.").then({});
+          //dialogs.alert(db.fetch()).then({});
           break;
         case connectionType.mobile:
-          dialogs.alert("Connection type changed to mobile.").then(() => {
-            console.log("Connection type changed to mobile.");
-          });
+          this.isConnected = true;
+          dialogs.alert("Connection type changed to mobile.").then({});
           break;
         default:
-          dialogs.alert("No coincidence").then(() => {
-            console.log("No coincidence");
-          });
+          dialogs.alert("No coincidence").then({});
           break;
       }
     });
@@ -111,20 +116,4 @@ export default {
 // Start custom common variables
 @import "../app-variables";
 // End custom common variables
-
-// Custom styles
-.list-group {
-  .list-group-item-content {
-    padding: 8 15 4 15;
-    background-color: $background-light;
-  }
-
-  .list-group-item-text {
-    margin: 2 3;
-  }
-
-  .fa {
-    color: $accent-dark;
-  }
-}
 </style>

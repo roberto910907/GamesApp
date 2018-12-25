@@ -92,36 +92,4 @@
 <style scoped lang="scss">
     // Custom common variables
     @import '../app-variables';
-
-    .page .thumb {
-        background-size: cover;
-        background-repeat: no-repeat;
-        padding: 0;
-        font-size: 25;
-        font-weight: bold;
-
-        Label {
-            width: 100%;
-            height: 100%;
-            padding: 25 30;
-        }
-
-        .thumb-add {
-            padding: 25;
-            background-color: transparent;
-            color: $blue-20;
-            border-radius: $border-radius;
-            border-width: $border-width;
-            border-color: $blue-20;
-        }
-
-        .thumb-remove {
-            color: $background-light;
-            background-color: $blue-20;
-        }
-    }
-
-    .invalid-image {
-        margin-left: 10;
-    }
 </style>

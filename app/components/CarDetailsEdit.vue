@@ -165,37 +165,4 @@
     // Custom common variables
     @import '../app-variables';
 
-    // Custom styles
-    .car-list {
-
-        .car-list-even,
-        .car-list-odd {
-            padding: 10 15;
-            border-bottom-width: $border-width;
-            border-color: $blue-20;
-        }
-
-        .car-list-odd {
-            background-color: $blue-10;
-            color: $blue-50;
-        }
-
-        .text-secondary {
-            horizontal-alignment: right;
-            vertical-alignment: center;
-        }
-
-        .car-list-price {
-            width: 35;
-            text-align: right;
-        }
-
-        TextField.invalid-text {
-            placeholder-color: $error;
-        }
-
-        .invalid-image {
-            color: $error;
-        }
-    }
 </style>
