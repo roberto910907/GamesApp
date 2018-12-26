@@ -175,6 +175,18 @@ module.exports = (env) => {
       },
       {
         test: /\.scss$/,
+        include: [
+          resolve(projectRoot, 'app/styles'),
+        ],
+        use: [
+          'nativescript-dev-webpack/style-hot-loader',
+          'nativescript-dev-webpack/apply-css-loader.js',
+          { loader: 'css-loader', options: { minimize: false, url: false } },
+          'sass-loader',
+        ],
+      },
+      {
+        test: /\.scss$/,
         use: [
           'nativescript-dev-webpack/style-hot-loader',
           'nativescript-dev-webpack/apply-css-loader.js',

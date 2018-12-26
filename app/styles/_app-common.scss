@@ -5,3 +5,30 @@
 .fa {
    font-family: "FontAwesome";
 }
+
+ //Action bar
+ .action-bar {
+   background-color: #fff;
+}
+
+.action-bar Label {
+   color: #000;
+}
+
+.action-item,
+ NavigationButton {
+     color: $ab-color;
+ }
+ 
+.action-item:disabled {
+     color: rgba($ab-color, 0.5);
+ }
+ 
+Slider {
+   background-color: $accent;
+   color: $accent;
+ }
+
+GridLayout {
+   padding: 60px;
+}

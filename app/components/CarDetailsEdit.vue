@@ -63,7 +63,7 @@
 <script>
     import { alert } from "ui/dialogs";
     import carService from "~/shared/cars/car-service";
-    import CarList from "./CarList";
+    import GameList from "./Game/List";
     import Selector from "./Selector";
     import AddRemoveImage from "./AddRemoveImage";
 
@@ -163,6 +163,6 @@
 
 <style lang="scss">
     // Custom common variables
-    @import '../app-variables';
+    @import '../styles/app-variables';
 
 </style>

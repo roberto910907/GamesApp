@@ -51,5 +51,5 @@
 
 <style lang="scss">
     // Custom common variables
-    @import '../app-variables';
+    @import '../styles/app-variables';
 </style>

@@ -1,8 +1,9 @@
 import Vue from 'nativescript-vue';
 import RadListView from 'nativescript-ui-listview/vue';
-import CarList from './components/CarList';
+import GameList from './components/Game/List';
 import CarDetails from './components/CarDetails';
 import CarDetailsEdit from './components/CarDetailsEdit';
+import store from './store/store';
 
 Vue.use(RadListView);
 
@@ -11,13 +12,14 @@ Vue.config.silent = true;
 new Vue({
   template: `
         <Frame>
-            <CarList :cars="cars" />
+            <GameList :cars="cars" />
         </Frame>`,
   components: {
-    CarList,
+    GameList,
     CarDetails,
     CarDetailsEdit,
   },
+  store,
   data: {
     cars: [],
   },

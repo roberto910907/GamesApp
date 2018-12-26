@@ -19,6 +19,7 @@
               <Span text="/day"/>
             </FormattedString>
           </Label>
+          
           <Label row="1" class="hr-light m-t-5 m-b-5" colspan="2"/>
 
           <Image
@@ -60,40 +61,47 @@
 
 <script>
 import * as dialogs from "tns-core-modules/ui/dialogs";
-import CarDetails from "./CarDetails";
+import CarDetails from "./../CarDetails";
 import { connectionType, startMonitoring } from "tns-core-modules/connectivity";
-import { DBConnection } from '../services/db/DBConnection';
+import { mapGetters, mapActions } from 'vuex';
+import { isBoolean } from 'util';
 
 export default {
-  data: {
-    isConnected: false
-  },
   created() {
     startMonitoring(newConnectionType => {
       switch (newConnectionType) {
         case connectionType.none:
-          this.isConnected = false;
-          dialogs.alert("Connection type changed to none.").then({});
+          this.updateConnectionStatus(false);
           break;
         case connectionType.wifi:
-          const db = new DBConnection();
-          console.log(db);
-    
-          this.isConnected = true;
-          dialogs.alert("Connection type changed to WiFi.").then({});
-          //dialogs.alert(db.fetch()).then({});
+         if(!this.isConnected){
+          dialogs.confirm("Ya tienes conexión WIFI. Deseas sincronizar la aplicación?").then(result => {
+            if(result === true) {
+              this.updateConnectionStatus(true);
+            }
+          });
+         }
           break;
         case connectionType.mobile:
-          this.isConnected = true;
-          dialogs.alert("Connection type changed to mobile.").then({});
+          if(!this.isConnected){
+            dialogs.confirm("Ya tienes conexión por Datos. Deseas sincronizar la aplicación?").then(result => {
+              if(result === true) {
+                this.updateConnectionStatus(true);
+              }
+            });
+          }
           break;
         default:
-          dialogs.alert("No coincidence").then({});
+          dialogs.alert("No identificamos ninguna conexión.").then({});
           break;
       }
     });
   },
   computed: {
+    ...mapGetters({
+      isConnected: 'GameList/getConnectionStatus'
+    }),
+
     carList() {
       return this.$root.cars;
     },
@@ -104,6 +112,9 @@ export default {
   },
 
   methods: {
+    ...mapActions({
+      updateConnectionStatus: 'GameList/updateConnectionStatus'
+    }),
     onItemTap(e) {
       this.$emit("select", e.item);
       this.$navigateTo(CarDetails, { props: { car: e.item } });
@@ -114,6 +125,5 @@ export default {
 
 <style scoped lang="scss">
 // Start custom common variables
-@import "../app-variables";
-// End custom common variables
+@import "../../styles/app.scss";
 </style>
