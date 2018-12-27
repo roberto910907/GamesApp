@@ -1,6 +1,4 @@
-import {
-  UPDATE_CONNECTION_SUCCESS,
-} from '../../utils/constants';
+const UPDATE_CONNECTION_SUCCESS = 'UPDATE_CONNECTION_SUCCESS';
 
 export default {
   namespaced: true,

@@ -1,9 +1,12 @@
 <template>
   <Page class="page">
-    <ActionBar class="action-bar">
+    <ActionBar class="action-bar" id="header">
+      <ActionItem ios.position="right" android.position="right">
+        <Image src="~/images/user.jpg" class="icon"/>
+      </ActionItem>
       <Label class="action-bar-title" text="Games" horizontalAlignment="left"/>
       <ActionItem ios.position="right" android.position="right">
-          <Switch :checked="isConnected" />
+        <Switch :checked="isConnected" />
       </ActionItem>
     </ActionBar>
 
@@ -126,4 +129,9 @@ export default {
 <style scoped lang="scss">
 // Start custom common variables
 @import "../../styles/app.scss";
+    #header .icon {
+      height: 120px;
+      border: 2px solid #ffffff;
+      border-radius: 100%;
+    }
 </style>
